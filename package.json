@@ -5,7 +5,8 @@
   "main": "index.js",
   "license": "ISC",
   "scripts": {
-    "build": "ncc build index.js"
+    "build": "ncc build index.js",
+    "build17": "node --openssl-legacy-provider ./node_modules/@vercel/ncc/dist/ncc/cli.js build index.js"
   },
   "prettier": {
     "printWidth": 120

@@ -8420,6 +8420,12 @@ class App {
       throw new Error("Missing target status input");
     }
 
+    this.isssuePrefixes = core.getInput("issue-prefixes");
+    if (!this.isssuePrefixes) {
+      throw new Error("Missing issue prefixes input");
+    }
+    this.isssuePrefixes = this.isssuePrefixes.split(/,\s*/);
+
     this.ignoreStatuses = core.getInput("ignore-statuses");
     this.ignoreStatuses = this.ignoreStatuses ? this.ignoreStatuses.split(/,\s*/) : [];
     this.ignoreStatuses.push(this.targetStatus);
@@ -8469,7 +8475,11 @@ class App {
     const issueIdRegEx = /([a-zA-Z0-9]+-[0-9]+)/g;
     const matches = commitMessages.join(" ").match(issueIdRegEx);
     if (!matches) return [];
-    return [...new Set(matches)];
+    const issueKeys = [...new Set(matches)];
+    return issueKeys.filter((key) => {
+      const prefix = key.substr(0, key.indexOf("-"));
+      return this.isssuePrefixes.includes(prefix);
+    });
   }
 
   async getTransitionIds(issues) {
