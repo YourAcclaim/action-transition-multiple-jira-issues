@@ -12,6 +12,10 @@ class Github {
     this.octokit = github.getOctokit(token);
   }
 
+  getPushCommitMessages() {
+    return github.context.payload.commits.map(c => c.message);
+  }
+
   async getPullRequestCommitMessages() {
     const { data, status } = await this.octokit.pulls.listCommits({
       owner: github.context.issue.owner,

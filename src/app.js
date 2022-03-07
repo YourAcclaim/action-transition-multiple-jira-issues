@@ -15,6 +15,7 @@ class App {
     }
     this.isssuePrefixes = this.isssuePrefixes.split(/,\s*/);
 
+    this.fromPush = core.getInput('from-push');
     this.ignoreStatuses = core.getInput("ignore-statuses");
     this.ignoreStatuses = this.ignoreStatuses ? this.ignoreStatuses.split(/,\s*/) : [];
     this.ignoreStatuses.push(this.targetStatus);
@@ -24,7 +25,12 @@ class App {
   }
 
   async run() {
-    const commitMessages = await this.github.getPullRequestCommitMessages();
+    let commitMessages;
+    if (this.fromPush) {
+      this.github.getPushCommitMessages();
+    } else {
+      await this.github.getPullRequestCommitMessages();
+    }
     const issueKeys = this.findIssueKeys(commitMessages);
     if (issueKeys.length === 0) {
       console.log(`Commit messages do not contain any issue keys`);
