@@ -27,9 +27,9 @@ class App {
   async run() {
     let commitMessages;
     if (this.fromPush) {
-      this.github.getPushCommitMessages();
+      commitMessages = this.github.getPushCommitMessages();
     } else {
-      await this.github.getPullRequestCommitMessages();
+      commitMessages = await this.github.getPullRequestCommitMessages();
     }
     const issueKeys = this.findIssueKeys(commitMessages);
     if (issueKeys.length === 0) {

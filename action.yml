@@ -26,6 +26,9 @@ inputs:
   jira-user-email:
     description: Email of the user for which Access Token was created for
     required: true
+  from-push:
+    description: If truthy, look for commits in push event, rather than pull request
+    required: false
 runs:
   using: "node12"
   main: "./dist/index.js"
