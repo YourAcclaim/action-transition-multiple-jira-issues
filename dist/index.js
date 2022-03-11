@@ -8551,7 +8551,7 @@ class Github {
       throw new Error("Something went wrong fetching commits from PR");
     }
 
-    return data.map((x) => x.commit.message);
+    return data.filter((x) => x.parents.length <= 1).map((x) => x.commit.message);
   }
 
   async publishComment(body) {
