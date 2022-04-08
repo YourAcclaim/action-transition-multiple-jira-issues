@@ -8539,6 +8539,8 @@ class Github {
       throw new Error("Missing GitHub token input");
     }
 
+    console.log("Debug (issue): ", github.context.issue);
+    console.log("Debug (pull_request): ", github.context.pull_request);
     this.octokit = github.getOctokit(token);
   }
 
