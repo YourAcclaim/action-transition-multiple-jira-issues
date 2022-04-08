@@ -8431,6 +8431,9 @@ class App {
     this.ignoreStatuses = this.ignoreStatuses ? this.ignoreStatuses.split(/,\s*/) : [];
     this.ignoreStatuses.push(this.targetStatus);
 
+    this.ignoreIssueTypes = core.getInput("ignore-issue-types");
+    this.ignoreIssueTypes = this.ignoreIssueTypes ? this.ignoreIssueTypes.split(/,\s*/) : [];
+
     this.jira = new Jira();
     this.github = new Github();
   }
@@ -8441,6 +8444,8 @@ class App {
       commitMessages = this.github.getPushCommitMessages();
     } else {
       commitMessages = await this.github.getPullRequestCommitMessages();
+      // treat PR title as a commit message, so that it will be scanned for ticket numbers
+      commitMessages = [...commitMessages, this.github.getPullRequestTitle()];
     }
     const issueKeys = this.findIssueKeys(commitMessages);
     if (issueKeys.length === 0) {
@@ -8473,7 +8478,8 @@ class App {
     const issuesData = await Promise.all(issueKeys.map((issueKey) => this.jira.getIssue(issueKey)));
     return issuesData.filter((issue) => {
       const status = issue.fields.status.name;
-      return !this.ignoreStatuses.includes(status);
+      const issueType = issue.fields.issuetype.name;
+      return !this.ignoreStatuses.includes(status) && !this.ignoreIssueTypes.includes(issueType);
     });
   }
 
@@ -8552,6 +8558,10 @@ class Github {
     }
 
     return data.filter((x) => x.parents.length <= 1).map((x) => x.commit.message);
+  }
+
+  getPullRequestTitle() {
+    return github.context.issue.title;
   }
 
   async publishComment(body) {
