@@ -30,6 +30,10 @@ class Github {
     return data.filter((x) => x.parents.length <= 1).map((x) => x.commit.message);
   }
 
+  getPullRequestTitle() {
+    return github.context.payload.pull_request.title;
+  }
+
   async publishComment(body) {
     await this.octokit.issues.createComment({
       owner: github.context.issue.owner,
