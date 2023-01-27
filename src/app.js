@@ -46,21 +46,6 @@ class App {
     const issueList = await this.getIssueListFromKeys(issueKeys);
     const transitionIds = await this.getTransitionIds(issueList);
     await this.transitionIssues(issueList, transitionIds);
-    await this.publishCommentWithIssues(issueList);
-  }
-
-  async publishCommentWithIssues(issueList) {
-    if (issueList.length > 0) {
-      const issueComment = issueList
-        .map((issue) => {
-          const summary = issue.fields.summary;
-          const issueUrl = `${this.jira.getBaseUrl()}/browse/${issue.key})`;
-          return `- ${summary} ([${issue.key}](${issueUrl})`;
-        })
-        .join("\n");
-      const body = `These issues have been moved to *${this.targetStatus}*:\n` + issueComment;
-      await this.github.publishComment(body);
-    }
   }
 
   async getIssueListFromKeys(issueKeys) {

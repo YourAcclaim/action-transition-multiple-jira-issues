@@ -33,15 +33,6 @@ class Github {
   getPullRequestTitle() {
     return github.context.payload.pull_request.title;
   }
-
-  async publishComment(body) {
-    await this.octokit.issues.createComment({
-      owner: github.context.issue.owner,
-      repo: github.context.issue.repo,
-      issue_number: github.context.issue.number,
-      body,
-    });
-  }
 }
 
 module.exports = Github;
