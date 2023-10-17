@@ -34,5 +34,5 @@ inputs:
     description: If truthy, look for commits in push event, rather than pull request
     required: false
 runs:
-  using: "node12"
+  using: "node20"
   main: "./dist/index.js"
